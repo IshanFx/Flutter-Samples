@@ -28,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   
   AnimationController animationController;
   Animation<double> animation;
+  Animation<double> sizeAnimation;
   int currentState = 0;
 
   @override
@@ -36,6 +37,11 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     super.initState();
     animationController = AnimationController(duration: Duration(milliseconds: 500),vsync: this);
     animation = Tween<double>(begin: 0,end: 60).animate(animationController)..addListener((){
+      setState(() {
+        
+      });
+    });
+    sizeAnimation = Tween<double>(begin: 0,end: 1).animate(CurvedAnimation(parent: animationController,curve: Curves.fastOutSlowIn))..addListener((){
       setState(() {
         
       });
@@ -56,25 +62,38 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
             children: <Widget>[
               Positioned(
                 bottom: animation.value,
-                child: FloatingActionButton(
-                  backgroundColor: Colors.redAccent,
-                  onPressed: (){},
-                  child: Icon(Icons.cake)),
+                child: Transform.scale(
+                    scale: sizeAnimation.value,
+                    child: FloatingActionButton(
+                    backgroundColor: Colors.redAccent,
+                    onPressed: (){},
+                    child: Icon(Icons.cake)),
+                ),
               ),
               Positioned(
                 bottom: 0,
                 
-                child: FloatingActionButton(
-                  onPressed: (){
-                    if(currentState == 0){
-                      animationController.forward();
-                      currentState = 1;
-                    } else{
+                child: Transform.scale(
+                  scale: sizeAnimation.value,
+                    child: FloatingActionButton(
+                    backgroundColor: Colors.green,
+                    onPressed: (){
                       animationController.reverse();
-                      currentState = 0;
-                    }
-                  },
-                  child: Icon(Icons.play_arrow)),
+                    },
+                    child: Icon(Icons.close)),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: Transform.scale(
+                  scale: sizeAnimation.value - 1,
+                   child: FloatingActionButton(
+                    onPressed: (){
+                      animationController.forward();
+                    
+                    },
+                    child: Icon(Icons.add)),
+                ),
               )
             ],
           ),
